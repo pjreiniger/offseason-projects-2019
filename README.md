@@ -12,19 +12,4 @@ This Repository will serve the purpose of storing the Offseason projects that OT
 * Automatic systems check to find issues before a match (Looking at you Thomas Priego)
 * Finetuning/Improving Data transportation along the CAN bus 
 
-## UML Diagram
-
-To be able to prototype the potential codebase and scope out the functions needed before actually writing the code, the 1st step to program the code is to generate a UML diagram to make sure the code is as organized. This is the current UML diagram for the Offseason projects codebase: 
-
-```mermaid
-graph LR
-A[Square Rect] --> B(Subsystem)
-A --> C(Lib)
-B --> E(Subsystem.java)
-B --> F(Swerve.java)
-B --> G(SwerveDriveModule.java)
-C --> D(pidnn)
-D --> H(NP.java)
-D --> I(OttoGen.java)
-```
 
