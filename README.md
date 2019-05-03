@@ -11,5 +11,3 @@ This Repository will serve the purpose of storing the Offseason projects that OT
 * Swerve Drive Library with OTTO's PIDNN
 * Automatic systems check to find issues before a match (Looking at you Thomas Priego)
 * Finetuning/Improving Data transportation along the CAN bus 
-
-
