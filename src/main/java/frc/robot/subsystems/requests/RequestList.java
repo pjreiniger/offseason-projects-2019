@@ -1,0 +1,61 @@
+package frc.robot.subsystems.requests;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class RequestList {
+  ArrayList<Request> requests;
+  boolean parallel = false;
+
+  public RequestList() {
+    this(Arrays.asList(new EmptyRequest()), false);
+  }
+
+  public RequestList(Request request) {
+    this(Arrays.asList(request), false);
+  }
+
+  /**
+   * Generate a list of Requests to be run by a subsystem in sequential order.
+   */
+  public RequestList(List<Request> requests, boolean parallel) {
+    this.requests = new ArrayList<>(requests.size());
+    for (Request request : requests) {
+      this.requests.add(request);
+    }
+    this.parallel = parallel;
+  }
+
+  public static RequestList emptyList() {
+    return new RequestList(new ArrayList<>(0), false);
+  }
+
+  public boolean isParallel() {
+    return parallel;
+  }
+
+  public List<Request> getRequests() {
+    return requests;
+  }
+
+  public void add(Request request) {
+    requests.add(request);
+  }
+
+  public void addToStart(Request request) {
+    requests.add(0, request);
+  }
+
+  public Request removeFromStart() {
+    return requests.remove(0);
+  }
+
+  public Request remove() {
+    return requests.remove(requests.size() - 1);
+  }
+
+  public boolean isEmpty() {
+    return requests.isEmpty();
+  }
+}
