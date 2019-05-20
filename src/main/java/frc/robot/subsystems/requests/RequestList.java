@@ -52,7 +52,7 @@ public class RequestList {
   }
 
   public Request remove() {
-    return requests.remove(requests.size() - 1);
+    return requests.remove(0);
   }
 
   public boolean isEmpty() {

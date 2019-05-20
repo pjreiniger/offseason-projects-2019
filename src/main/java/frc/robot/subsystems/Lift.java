@@ -5,14 +5,18 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.Constants;
 import frc.robot.Ports;
+import frc.robot.subsystems.requests.Prerequisite;
 import frc.robot.subsystems.requests.Request;
 import frc.robot.util.LazyTalonSRX;
 import frc.robot.util.LazyVictorSPX;
-
+import frc.robot.util.Util;
 import java.util.Arrays;
 import java.util.List;
 
@@ -91,7 +95,20 @@ public class Lift extends Subsystem {
   private void configForAscent() {
     manualSpeed = Constants.kMaxElevatorTeleopSpeed;
 
+    liftRight.config_kF(0, 1023.0 / Constants.kElevatorMaxHighGear, 10);
+    liftRight.config_kP(0, 2.5, 10);
+    liftRight.config_kI(0, 0, 10);
+    liftRight.config_kD(0, 25, 10);
+
+    liftRight.config_kF(1, 1023.0 / Constants.kElevatorMaxHighGear, 10);
+    liftRight.config_kP(1, 3.5, 10);
+    liftRight.config_kI(1, 0, 10);
+    liftRight.config_kD(1, 35, 10);
+
+    liftRight.configMotionCruiseVelocity((int) (Constants.kElevatorMaxHighGear * 1.0), 10);
+    liftRight.configMotionAcceleration((int) (Constants.kElevatorMaxHighGear * 3.0), 10);
     liftRight.configMotionSCurveStrength(0);
+
     configForAscent = true;
   }
 
@@ -110,7 +127,7 @@ public class Lift extends Subsystem {
     limitsEnabled = enable;
   }
 
-  public void setOpenLoop(double output) {
+  private void setOpenLoop(double output) {
     setState(ControlState.OpenLoop);
     periodicIO.demand = output * manualSpeed;
   }
@@ -191,6 +208,17 @@ public class Lift extends Subsystem {
     };
   }
 
+  public Prerequisite heightRequisite(double height, boolean above) {
+
+    return new Prerequisite() {
+    
+      @Override
+      public boolean met() {
+        return Util.epsilonEquals(Math.signum(height - getHeight()), above ? 1.0 : -1.0);
+      }
+    };
+  }
+
   boolean onTarget = false;
   double startTime = 0.0;
 
@@ -214,7 +242,21 @@ public class Lift extends Subsystem {
 
   @Override
   public void outputTelemetery() {
+    SmartDashboard.putNumber("Elevator Height", getHeight());
 
+    if (Constants.kDebuggingOutput) {
+      SmartDashboard.putNumber("Elevator 1 Voltage", periodicIO.vol);
+      SmartDashboard.putNumber("Elevator 2 Voltage", liftLeft.getMotorOutputVoltage());
+      SmartDashboard.putNumber("Elevator 1 Current", periodicIO.cur);
+      SmartDashboard.putNumber("Elevator Pulse Width Position", 
+          liftRight.getSensorCollection().getPulseWidthPosition());
+      SmartDashboard.putNumber("Elevator Encoder", periodicIO.pos);
+      SmartDashboard.putNumber("Elevator Velocity", periodicIO.vel);
+      SmartDashboard.putNumber("Elevator Error", liftRight.getClosedLoopError(0));
+      if (liftRight.getControlMode() == ControlMode.MotionMagic) {
+        SmartDashboard.putNumber("Elevator Setpoint", liftRight.getClosedLoopTarget());
+      }
+    }
   }
 
   private double encTicksToInches(double encTicks) {
@@ -244,6 +286,48 @@ public class Lift extends Subsystem {
       hasEmergency = true;
     }
     return connected;
+  }
+
+  public void resetToAbsolutePosition() {
+    int position = (int) Util.boundToScope(0, 4096, 
+        liftRight.getSensorCollection().getPulseWidthPosition());
+    if (encTicksToElevatorHeight(position) > Constants.kMaxInitialElevatorHeight) {
+      position -= 4096;
+    } else if (encTicksToElevatorHeight(position) < Constants.kMinInitialElevatorHeight) {
+      position += 4096;
+    }
+    double height = encTicksToElevatorHeight(position);
+    if (height > Constants.kMaxInitialElevatorHeight  
+        || height < Constants.kMinInitialElevatorHeight) {
+      System.out.println("Elevator done goofed up");
+      hasEmergency = true;
+    }
+    liftRight.setSelectedSensorPosition(position, 0, 10);
+  }
+
+  @Override
+  public void readPeriodicInputs() {
+    periodicIO.pos = liftRight.getSelectedSensorPosition(0);
+
+    if (Constants.kDebuggingOutput) {
+      periodicIO.vel = liftRight.getSelectedSensorVelocity(0);
+      periodicIO.vol = liftRight.getMotorOutputVoltage();
+      periodicIO.cur = liftRight.getOutputCurrent();
+    }    
+  }
+
+  @Override
+  public void zeroSensors() {
+    resetToAbsolutePosition();
+  }
+
+  @Override
+  public void writePeriodicOutputs() {
+    if (getState() == ControlState.Position || getState() == ControlState.Locked) {
+      liftRight.set(ControlMode.MotionMagic, periodicIO.demand);
+    } else {
+      liftRight.set(ControlMode.PercentOutput, periodicIO.demand);
+    }
   }
 
   public static class PeriodicIO {

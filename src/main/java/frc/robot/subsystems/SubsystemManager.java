@@ -55,7 +55,7 @@ public class SubsystemManager implements ILooper {
     @Override
     public void onLoop(double timestamp) {
       for (Subsystem s : mAllSubsystems) {
-        s.readPeriodicOutputs();
+        s.readPeriodicInputs();
       }
       for (Loop l : mLoops) {
         l.onLoop(timestamp);
@@ -84,7 +84,7 @@ public class SubsystemManager implements ILooper {
     @Override
     public void onLoop(double timestamp) {
       for (Subsystem s : mAllSubsystems) {
-        s.readPeriodicOutputs();
+        s.readPeriodicInputs();
       }
       for (Subsystem s : mAllSubsystems) {
         s.writePeriodicOutputs();
@@ -104,7 +104,6 @@ public class SubsystemManager implements ILooper {
   }
 
   public void registerDisabledLooper(ILooper looper) {
-    mAllSubsystems.forEach(s -> s.registerEnabledLooper(this));
     looper.register(new disabledLoop());
   }
 

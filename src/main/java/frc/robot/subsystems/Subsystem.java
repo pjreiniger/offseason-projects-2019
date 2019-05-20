@@ -20,7 +20,7 @@ public abstract class Subsystem {
   public void writePeriodicOutputs() {
   }
 
-  public void readPeriodicOutputs() {
+  public void readPeriodicInputs() {
   }
 
   public void zeroSensors() {
