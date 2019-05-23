@@ -51,10 +51,6 @@ public class Drivetrain extends Subsystem {
     configForTeleop();
   }
 
-  public void configForAuton() {
-
-  }
-
   public void configForTeleop() {
 
   }
