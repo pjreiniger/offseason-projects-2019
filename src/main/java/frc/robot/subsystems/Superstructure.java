@@ -121,49 +121,62 @@ public class Superstructure extends Subsystem {
 
     @Override
     public void onLoop(double timestamp) {
-      if (newRequests) {
-        if (activeRequests.isParallel()) {
-          boolean allActivated = true;
-          for (Iterator<Request> iterator = activeRequests.getRequests().iterator(); 
-              iterator.hasNext();) {
-                Request request = iterator.next();
-                boolean allowed = request.allowed();
-                allActivated &= allowed;
-                if (allowed) {
-                  request.act();
-                }
+      synchronized(Superstructure.this) {
+        if (!allRequestsCompleted) {
+          if (newRequests) {
+            if (activeRequests.isParallel()) {
+              boolean allActivated = true;
+              for (Iterator<Request> iterator = activeRequests.getRequests().iterator(); 
+                  iterator.hasNext();) {
+                    Request request = iterator.next();
+                    boolean allowed = request.allowed();
+                    allActivated &= allowed;
+                    if (allowed) {
+                      request.act();
+                    }
+              }
+              newRequests = !allActivated;
+            } else {
+              if (activeRequests.isEmpty()) {
+                activeRequestsCompleted = true;
+                return;
+              }
+              currentRequest = activeRequests.remove();
+              currentRequest.act();
+              newRequests = false;
+            }
           }
-          newRequests = !allActivated;
+          if (activeRequests.isParallel()) {
+            boolean done = true;
+            for (Request r : activeRequests.getRequests()) {
+              done &= r.isFinished();
+            }
+            activeRequestsCompleted = done;
+          } else if (currentRequest.isFinished()) {
+            if (activeRequests.isEmpty()) {
+              activeRequestsCompleted = true;
+            } else if (activeRequests.getRequests().get(0).allowed()) {
+              newRequests = true;
+              activeRequestsCompleted = false;
+            }
+          }
         } else {
-          if (activeRequests.isEmpty()) {
-            activeRequestsCompleted = true;
-            return;
+          if (!queuedRequests.isEmpty()) {
+            setActiveRequests(queuedRequests.remove(0));
+          } else {
+            allRequestsCompleted = true;
           }
-          currentRequest = activeRequests.remove();
-          currentRequest.act();
-          newRequests = false;
         }
-      }
-      if (activeRequests.isParallel()) {
-        boolean done = true;
-        for (Request r : activeRequests.getRequests()) {
-          done &= r.isFinished();
-        }
-        activeRequestsCompleted = done;
-      } else if (currentRequest.isFinished()) {
-        if (activeRequests.isEmpty()) {
-          activeRequestsCompleted = true;
-        } else if (activeRequests.getRequests().get(0).allowed()) {
-          newRequests = true;
-          activeRequestsCompleted = false;
-        }
+        
+      
       }
     }
-
+    
     @Override
     public void onStop(double timestamp) {
 
     }
+  
 
   };
 

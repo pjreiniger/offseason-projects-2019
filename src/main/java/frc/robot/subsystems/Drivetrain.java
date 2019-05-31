@@ -68,7 +68,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public static class PeriodicIO {
-    public double controlInput = 0.0;
+    public double driveInput = 0.0;
 
     public double demand;
   }

@@ -1,6 +1,6 @@
 package frc.robot.lib.team254.trajectory.timing;
 
-import com.team1323.frc2019.Constants;
+import frc.robot.Constants;
 import frc.robot.lib.team254.geometry.Pose2dWithCurvature;
 
 public class CurvatureVelocityConstraint implements TimingConstraint<Pose2dWithCurvature>{

@@ -3,6 +3,7 @@ package frc.robot;
 public class Constants {
   // Miscellaneous
   public static final boolean kDebuggingOutput = false;
+  public static final double kLooperDt = 20;
 
   // Elevator Constants
   public static final double kMaxElevatorTeleopSpeed = 0.1;

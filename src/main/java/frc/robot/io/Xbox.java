@@ -30,7 +30,7 @@ public class Xbox extends XboxController {
   public static final int POV_270 = -7;
 
   public void setDeadband(double db) {
-  
+    DEAD_BAND = db;
   }
   
   public Xbox(int port) {
