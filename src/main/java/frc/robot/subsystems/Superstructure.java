@@ -18,19 +18,10 @@ import java.util.List;
 public class Superstructure extends Subsystem {
   public Lift lift;
 
-  private Superstructure() {
+  public Superstructure() {
     lift = Lift.getInstance();
 
     queuedRequests = new ArrayList<>(0);
-  }
-
-  private static Superstructure instance = null;
-
-  public static Superstructure getInstance() {
-    if (instance == null) {
-      instance = new Superstructure();
-    }
-    return instance;
   }
 
   private RequestList activeRequests;

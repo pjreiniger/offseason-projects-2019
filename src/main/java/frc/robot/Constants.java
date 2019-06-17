@@ -5,6 +5,10 @@ public class Constants {
   public static final boolean kDebuggingOutput = false;
   public static final double kLooperDt = 20;
 
+  // Swerve
+  public static final double kSwerveEncUnitsPerInch = 0.5;
+  
+
   // Elevator Constants
   public static final double kMaxElevatorTeleopSpeed = 0.1;
   public static final double kMaxElevatorHeight = 10;
