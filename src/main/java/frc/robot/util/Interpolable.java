@@ -1,8 +1,9 @@
 package frc.robot.util;
 
 /**
- * Interpolable is an interface used by an Interpolating Tree as the Value type. Given two end points and an
- * interpolation parameter on [0, 1], it calculates a new Interpolable representing the interpolated value.
+ * Interpolable is an interface used by an Interpolating Tree as the Value type. 
+ * Given two end points and an interpolation scale on [0, 1]. 
+ * It calculates a new Interpolable representing the interpolated value.
  * 
  * @param <T>
  *            The Type of Interpolable
@@ -11,9 +12,10 @@ package frc.robot.util;
 
 public interface Interpolable<T> {
   /**
-     * Interpolates between this value and an other value according to a given parameter. If x is 0, the method should
-     * return this value. If x is 1, the method should return the other value. If 0 < x < 1, the return value should be
-     * interpolated proportionally between the two.
+     * Interpolates between this value and an other value according to a given scale. 
+     * If x is 0, the method should return the initial value. 
+     * If x is 1, the method should return the other value. 
+     * If 0 < x < 1, the return value should be interpolated proportionally between the two.
      *
      * @param value
      *            The value of the upper bound

@@ -18,6 +18,9 @@ import java.util.List;
 public class Superstructure extends Subsystem {
   public Lift lift;
 
+  /**
+   * Constructor for Superstructure, purpose can be found at class definition.
+   */
   public Superstructure() {
     lift = Lift.getInstance();
 

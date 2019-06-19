@@ -7,7 +7,14 @@ public class Constants {
 
   // Swerve
   public static final double kSwerveEncUnitsPerInch = 0.5;
-  
+  public static final double kSwerveRotationMaxSpeed = 0.5;
+  public static final double kSwerveRotation10VoltMaxSpeed = 0.5;
+  public static final double kSwerveDriveMaxSpeed = 0.5;
+  public static final double kSwerveDriveEncoderResolution = 0.5;
+  public static final double[] kWheelScrubFactors = new double[4];
+  public static final double kXScrubFactor = 0.5;
+  public static final double kYScrubFactor = 0.5;
+  public static final boolean kSimulateReversedCarpet = false;
 
   // Elevator Constants
   public static final double kMaxElevatorTeleopSpeed = 0.1;
