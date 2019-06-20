@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import frc.robot.Constants;
+
 /**
  * Class for Utility functions/variables that fall into no particular class 
  * and used in most places of the codebase.
@@ -10,16 +12,20 @@ public class Util {
 
   }
 
-  public static double kElipson = 1e-6;
-
   public static boolean epsilonEquals(double a, double b, double elipson) {
     return (a - elipson <= b) && (a + elipson >= b);
   }
 
   public static boolean epsilonEquals(double a, double b) {
-    return epsilonEquals(a, b, kElipson);
+    return epsilonEquals(a, b, Constants.kElipson);
   }
 
+  /**
+   * Bind a value to a specified scope.
+   * @param lowerScope The minimum value of the scope
+   * @param upperScope Number to be placed within scope
+   * @return Scoped value
+   */
   public static double boundToScope(double lowerScope, double upperScope, double argument) {
     double stepSize = upperScope - lowerScope;
     while (argument >= upperScope) {
