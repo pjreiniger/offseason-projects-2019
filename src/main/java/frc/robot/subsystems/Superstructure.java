@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * A class to handle subsystem requests and the robot as a whole.
@@ -18,13 +19,31 @@ import java.util.List;
 public class Superstructure extends Subsystem {
   public Lift lift;
 
+  private Swerve swerve;
+
+
   /**
    * Constructor for Superstructure, purpose can be found at class definition.
    */
-  public Superstructure() {
+  private Superstructure() {
     lift = Lift.getInstance();
 
+    swerve = Swerve.getInstance();
+
     queuedRequests = new ArrayList<>(0);
+  }
+
+  private static Superstructure instance = null;
+
+  /**
+   * Return main Instance of Superstructure.
+   * @return Instance of Superstructure.
+   */
+  public static Superstructure getInstance() {
+    if (instance == null) {
+      instance = new Superstructure();
+    }
+    return instance;
   }
 
   private RequestList activeRequests;
@@ -205,6 +224,25 @@ public class Superstructure extends Subsystem {
   @Override
   public void outputTelemetery() {
 
+  }
+
+  public Request waitRequest(double seconds) {
+    return new Request() {
+      double startTime = 0.0;
+      double waitTime = 1.0;
+
+      @Override
+      public void act() {
+        startTime = Timer.getFPGATimestamp();
+        waitTime = seconds;
+      }
+
+      @Override
+      public boolean isFinished() {
+        return (Timer.getFPGATimestamp() - startTime) > waitTime;
+      }
+      
+    };
   }
 
   @Override

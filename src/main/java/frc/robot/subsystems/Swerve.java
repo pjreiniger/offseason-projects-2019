@@ -649,6 +649,15 @@ public class Swerve extends Subsystem {
   }
 
   @Override
+  public void zeroSensors() {
+    modules.forEach(m -> m.zeroSensors());
+  }
+
+  public void zeroSensors(Pose2d pose) {
+    modules.forEach(m -> m.zeroSensors(pose));
+  }
+
+  @Override
   public void outputTelemetery() {
     modules.forEach(m -> m.outputTelemetery());
     SmartDashboard.putNumberArray("Robot Pose", new double[]{pose.getTranslation().x(), 
