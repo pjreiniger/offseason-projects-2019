@@ -74,7 +74,7 @@ public class SwerveHeadingController {
 
   /**
    * Calculate the correction to get a target rotation.
-   * @param heading desired heading of rotation
+   * @param heading current heading of rotation
    * @param timestamp time when correction is called
    * @return rotational correction
    */

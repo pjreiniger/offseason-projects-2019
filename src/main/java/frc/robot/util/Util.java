@@ -81,7 +81,6 @@ public class Util {
       lowerBound = scopeReference - lowerOffset;
       upperBound = scopeReference + (360 - lowerOffset);
     } else {
-      // This should never even happen, but just in case
       upperBound = scopeReference - lowerOffset;
       lowerBound = scopeReference - (360 + lowerOffset);
     }
@@ -97,6 +96,18 @@ public class Util {
       newAngle += 360;
     }
     return newAngle;
+  }
+
+  public static boolean shouldReverse(double goalAngle, double currentAngle) {
+    goalAngle = boundAngle0to360Degrees(goalAngle);
+    currentAngle = boundAngle0to360Degrees(currentAngle);
+    double revesedAngle = boundAngle0to360Degrees(currentAngle + 180);
+    double angleDifference = Math.abs(goalAngle - currentAngle);
+    double reversedAngleDifference = Math.abs(goalAngle - revesedAngle);
+    angleDifference = (angleDifference > 180) ? 360 - angleDifference : angleDifference;
+    reversedAngleDifference = (reversedAngleDifference > 180) 
+        ? 360 - reversedAngleDifference : reversedAngleDifference;
+    return reversedAngleDifference < angleDifference;
   }
 
   public static double deadBand(double val, double deadband) {

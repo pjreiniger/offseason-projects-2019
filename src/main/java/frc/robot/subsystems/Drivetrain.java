@@ -45,17 +45,18 @@ public class Drivetrain extends Subsystem {
     motors = Arrays.asList(rightMaster, rightSlaveA, rightSlaveB, 
         leftMaster, leftSlaveA, leftSlaveB);
 
-    slavesR = Arrays.asList(rightSlaveA, rightSlaveB, leftSlaveA, leftSlaveB);
+    slavesR = Arrays.asList(rightSlaveA, rightSlaveB);
+    slavesL = Arrays.asList(leftSlaveA, leftSlaveB);
 
     slavesR.forEach(s -> s.set(ControlMode.Follower, Ports.MOTOR_DRIVE_RIGHT_MASTER));
-    
+    slavesL.forEach(s -> s.set(ControlMode.Follower, Ports.MOTOR_DRIVE_LEFT_MASTER));
+
     for (BaseMotorController motor : motors) {
       motor.configVoltageCompSaturation(12.0, 10);
       motor.enableVoltageCompensation(true);
       motor.setNeutralMode(NeutralMode.Brake);
     }
 
-    configForTeleop();
   }
 
   public void configForTeleop() {
@@ -75,8 +76,11 @@ public class Drivetrain extends Subsystem {
   }
 
   public static class PeriodicIO {
-    public double driveInput = 0.0;
+    public double drivePos = 0.0;
+    public int velocity = 0;
+    public double driveVoltage = 0;
 
-    public double demand;
+    public ControlMode driveControlMode = ControlMode.PercentOutput;
+    public double driveDemand;
   }
 }

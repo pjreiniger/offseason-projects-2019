@@ -79,6 +79,10 @@ public class Superstructure extends Subsystem {
     setQueuedRequests(queuedList);
   }
 
+  /**
+   * Add a request to the ActiveRequests List.
+   * @param r Request to add to Active Requests
+   */
   public void addActiveRequest(Request r) {
     activeRequests.add(r);
     newRequests = true;
@@ -115,7 +119,7 @@ public class Superstructure extends Subsystem {
 
     @Override
     public void onLoop(double timestamp) {
-      synchronized(Superstructure.this) {
+      synchronized (Superstructure.this) {
         if (!allRequestsCompleted) {
           if (newRequests) {
             if (activeRequests.isParallel()) {

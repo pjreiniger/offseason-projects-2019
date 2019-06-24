@@ -13,6 +13,10 @@ public class Pigeon {
 
   private PigeonIMU pigeon;
 
+  /**
+   * Get a singular instance of the Pigeon IMU object.
+   * @return An instance of the Pigeon IMU
+   */
   public static Pigeon getInstance() {
     if (instance == null) {
       instance = new Pigeon();
@@ -31,31 +35,51 @@ public class Pigeon {
   public boolean isGood() {
     return (pigeon.getState() == PigeonState.Ready) ? true : false;
   }
-
+  
+  /**
+   * Returns the Yaw of the Pigeon.
+   * @return Yaw value in Rotation2d format
+   */
   public Rotation2d getYaw() {
     PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
     SmartDashboard.putNumber("Pigeon Heading", -pigeon.getFusedHeading());
     return Rotation2d.fromDegrees(-pigeon.getFusedHeading(fusionStatus));
   }
 
+  /**
+   * Returns the Pitch of the Pigeon.
+   * @return Pitch
+   */
   public double getPitch() {
     double[] ypr = new double[3];
     pigeon.getYawPitchRoll(ypr);
     return ypr[1];
   }
 
+  /**
+   * Returns the Roll of the Pigeon.
+   * @return Roll
+   */
   public double getRoll() {
     double[] ypr = new double[3];
     pigeon.getYawPitchRoll(ypr);
     return ypr[2];
   }
 
+  /**
+   * Returns Yaw, Pitch, and Roll of the Pigeon. 
+   * @return An Array of all three axis values
+   */
   public double[] getYPR() {
     double[] ypr = new double[3];
     pigeon.getYawPitchRoll(ypr);
     return ypr;
   }
 
+  /**
+   * Sets the angle the Pigeon should be at.
+   * @param angle Angle Pigeon should be at
+   */
   public void setAngle(double angle) {
     pigeon.setFusedHeading(-angle * 64.0, 10);
     pigeon.setYaw(-angle, 10);

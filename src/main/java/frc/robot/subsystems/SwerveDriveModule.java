@@ -52,6 +52,7 @@ public class SwerveDriveModule extends Subsystem {
     name += moduleID + " ";
     rotationMotor = new LazyTalonSRX(rotationSlot);
     driveMotor = new LazyTalonSRX(driveSlot);
+    configureMotors();
     this.moduleID = moduleID;
     this.encoderOffset = encOffset;
     previousEncDist = 0;
@@ -371,8 +372,8 @@ public class SwerveDriveModule extends Subsystem {
   }
 
   /**
-   * Reset the Pose of the Robot.
-   * @param robotPose Pose to reset to.
+   * Transform Position of Module from robotPose.
+   * @param robotPose Pose to calculate Translation from.
    */
   public synchronized void resetPose(Pose2d robotPose) {
     Translation2d modulePosition = robotPose.transformBy(
