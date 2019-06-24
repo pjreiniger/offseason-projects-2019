@@ -143,6 +143,9 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
+  /** 
+   * Mode if one controller is detected (or just swerve).
+  */
   public void oneControllerMode() {
     double swerveYInput = driver.getX(Hand.kLeft);
     double swerveXInput = -driver.getY(Hand.kLeft);
